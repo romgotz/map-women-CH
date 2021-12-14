@@ -1,0 +1,113 @@
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12pt;
+  margin: 2px;
+  padding: 2px;
+}
+
+#map_area {
+  position: relative;
+  top: 0;
+  left: 0;
+  border: 1px solid #666;
+  text-align: center;
+  width: 730px;
+  height: 590px;
+  padding: 10px;
+
+}
+
+/* barre latérale qui contient texte explicatif, le graphe, et copyright */
+.sidebar {
+  position: absolute;
+  top: 2px;
+  left: 740px;
+  width: 500px;
+  height: 590px;
+  background-color: #f0f0f0;
+  border: 1px solid #666;
+  padding: 5px;
+  margin: 2px;
+}
+
+.explication {
+  font-size: 14px;
+  text-align: justify;
+  margin: 3px;
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.copyright {
+  position: absolute;
+  bottom: 0;
+  font-size: 9pt;
+  margin-bottom: 10px;
+}
+
+text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  font-size: 13px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#explication_slider {
+  position: absolute;
+  top: 500px;
+  left: 120px;
+  padding: 10px;
+  text-align: center;
+}
+
+.container {
+  position: absolute;
+  top: 530px;
+  left: 100px;
+  padding: 10px;
+  align-content: center;
+  width: 100%;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+}
+
+input[type=range] {
+  width: 50%;
+  left:0;
+}
+
+button {
+  flex: 0 0 auto;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  background: white;
+  font-size: 24px;
+  border: 1px solid lightgrey;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin: 0 10px;
+}
+
+.tooltip {
+  box-shadow: 1px 1px 5px 3px grey;
+} 
+
+/* Defining the animation that takes place at the opening of the page  */
+.highlight {
+  animation-name: highlightInfobox;
+  animation-duration: 1.5s;
+  animation-iteration-count: 2;
+}
+
+@keyframes highlightInfobox {
+  0%   { background-color: #f0f0f0; }
+  20%  { background-color: #d0d0d0; }
+  50%  { background-color: #d0d0d0; }
+  100% { background-color: #f0f0f0; }
+}
