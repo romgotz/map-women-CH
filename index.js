@@ -12,16 +12,16 @@ padding_legend = 5;
 
 // definition of general variables  
 var data_series = null, data_obj = {}, selected_year = 1975, domainscale = [], colorscale = []; 
-const f = d3.format(".2f"); // determine two decimals for precision
+const f = d3.format(".2f"); // determine precision of two decimals 
 
 const path = d3.geoPath(), bbox = [485000, 75000, 834000, 296000];
 
-// animation to grasp the user's attention to the sidebar that gives an explanation of what this visualisation is about. Starts after 2 seconds, to make sure that the user is looking. 
+// animation to grasp the user's attention to the sidebar giving explanation of what this is about 
 let animation_count = 0;
 setTimeout(function(){
 $(".explication").addClass('highlight');
 animation_count += 1;
-}, 2000);
+}, 3000); // starts after 3 seconds 
 
 // creating the svg that contains the map
 const svg = d3.select('#map_area')
@@ -46,7 +46,7 @@ const svg_graph = d3.select('#graph_area')
 var scaleX = width / (bbox[2] - bbox[0]),
  scaleY = height / (bbox[3] - bbox[1]);
 var scale = Math.min(scaleX, scaleY); // choose the min to avoid distortion 
-// corresponding translation
+// apply corresponding translation
 var dx = -1 * scale * bbox[0];
 var dy = scale * bbox[1] + parseFloat(height);
 
@@ -58,7 +58,7 @@ let map = svg.append('g')
     'matrix('+scale+' 0 0 -'+scale+' '+dx+' '+dy+')'
   );
 
-// Adding the tooltip and the title, they are "fixed" ,do not need specific data to be built, but will update with interactivity 
+// add tooltip 
 var tooltip = addTooltip();
 
 // Construction titre 
@@ -66,10 +66,9 @@ svg.append("text")
       .attr('x', (width / 2))
       .attr('y', 0 + margin.top)
       .attr('text-anchor', 'middle')
-      .style('font-weight', '300')
       .style('font-size', '16px')
         .text("1975-2020 : Evolution du pourcentage de femmes dans les parlements cantonaux suisses")
-        .classed('main-title', true);
+        .classed('main-title', true) // class to change it easily
 
 // download the data with the promises (asynchronus)
 let promises = [];
@@ -78,7 +77,7 @@ promises.push(d3.csv('data_1975_2020.csv'));
 
 Promise.all(promises)
   .then(function(result){
-// store the data in variables
+// store the data 
 const topojson_geom = result[0], csv = result[1];
 
 // link two files
@@ -87,7 +86,7 @@ for (var i = 0; i < csv.length; i++) {
     data_obj[canton_id] = csv[i];
 };
 
-// drawing the map for the selected year   
+// drawing the map for the selected year 
 function updateMap(selected_year){
    
     // remove the legend and the map
@@ -97,21 +96,21 @@ function updateMap(selected_year){
     // Compute the class limits using Jenks (using classybrewer)
     data_series = csv.map(d => +d[selected_year]); // getting the data
 
-    // loop dealing with missing values if there are some --> replaced with -1 to differentiate them
+    // loop dealing with missing values if there are some 
     for(i = 0; i< data_series.length; i++) {
         if(isNaN(data_series[i])){
-            data_series[i] = -1; 
+            data_series[i] = -1; // to diferentiate them easily 
         }
     }; // end of loop 
 
     data_series = data_series.filter(function(v){return v >= 0}); // only keeping existing values to do the classification
 
-    // classification using ClassyBrew
+    // classification using ClassyBrew library
     var brew = new classyBrew();
     brew.setSeries(data_series);
-    brew.setNumClasses(5); // using Yule and Huntsberger formulas, gives 5 classes 
+    brew.setNumClasses(5); // using Yule and Huntsberger formulas, gives ~5 classes 
     brew.setColorCode('PuBu');
-    var breaks = brew.classify('quantile') // choose between : quantile (equal count), jenks or equal interval
+    var breaks = brew.classify('quantile') // choose between : quantile (equal count), jenks or equal interval --> here quantile as comparison of maps
     var color = d3.scaleThreshold()
         .domain(breaks.slice(1,5))
         .range(brew.getColors());
@@ -126,10 +125,10 @@ function updateMap(selected_year){
 
     // constructing the legend
     var legend = svg.append('g').attr('transform', 'translate(595, 60)').classed('all-legend', true)
-
+    // determining width and height
     var width_legend = 155, height_legend = legendCellSize*10;
     
-    // ligne autour de la legend to highligh it
+    // highlight it with line
     legend.append('rect')
       .attr('height', height_legend)
       .attr('width', width_legend+ padding_legend)
@@ -168,7 +167,7 @@ function updateMap(selected_year){
           .style("fill", "#929292")
               .text("Pas de données");
 
-    // adding rectangles for the classes
+    // adding rectangles for the classes with interactivity
     legend.selectAll()
       .data(d3.range(colorscale.length))
       .enter()
@@ -256,7 +255,6 @@ function updateMap(selected_year){
                 .on('click', click_map) 
                 .on('mouseover', mouseover_map)
                 .on('mouseout', mouseout_map)
-                // .on('mousemove', mousemove_map);
                 
   // defining functions for the interactivity 
   function mouseover_map(event, d){
@@ -317,20 +315,21 @@ function getColorIndex(color) {
 
 }; // end of updateMap
 updateMap(selected_year); // initialise the map for 1975
-// addTitle();
 
-// Update the current slider value if changed (each time you drag the slider handle) and changing the map with it
+// Dealing with slider event
+      // minus button
       $("#minus").click(function(event) {
         zoom("out"); 
       });
+      // plus button
       $("#plus").click(function(event) {
         zoom("in");
       });
+      // slider dragging
       $("#range").on('input change', function(event) {
         let selected_year = $(event.currentTarget).val()
         $('#output').text("Année: " + selected_year);
-        updateMap(selected_year); // update the map if the slider is moved without the buttons
-        // updating title
+        updateMap(selected_year); 
         d3.selectAll('.main-title').remove();
         addTitle(selected_year)
       });
@@ -363,19 +362,10 @@ function drawGraph(canton_id){
 
     d3.select(".line").remove(); // line
     d3.select(".graph-title").remove(); // title of the graph
-    d3.selectAll(".dot").remove();
+    d3.selectAll(".dot").remove(); // circles 
     d3.select('.axeX').remove(); // Xaxis
     d3.select('.axeY').remove(); // Yaxis
 
-  // a decider si je garde animation sur partie du graphe, mais ça n'ajoute pas grand chose je trouve
-  /*
-  // Add animation to side to direct user's attention to the graph
-  $(".graph_area").removeClass('highlight'); // remove the class to do the animation again
-  setTimeout(function(){
-    $(".graph_area").addClass('highlight'); // do the little animation again to grasp user's attention 
-    }, 1000);
-    */
-  
     // Selecting data based on the clicked canton  
     const dataFilter = data.filter(function(d){return d.id==canton_id})
 
@@ -527,7 +517,7 @@ function drawGraph(canton_id){
           .on('mouseout', () => focus.style('display', 'none'))
           .on('touchmove mousemove', mousemove_graph);
 
-      // defining the mousemove function
+      // defining the mousemove function on graph
       function mousemove_graph(event){
         // defining some variables to access data to show after
         const bisect = d3.bisector((d) => d.annee).left 
@@ -561,7 +551,7 @@ function drawGraph(canton_id){
             
       };
 
-      // define the function transition 
+      // function building the line
       function transition(path){
         path.transition()
           .duration(5000)
@@ -618,7 +608,8 @@ function addTooltip(){
     
     return tooltip;
     }; // end tooltip function
-// Constructing the title with the sources 
+
+// constructing title 
 function addTitle(selected_year){
         // Construction titre 
         svg.append("text")
