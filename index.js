@@ -435,7 +435,7 @@ function drawGraph(canton_id){
         .attr("x", 0 - height_graph/2)
         .attr("dy", "1em")
         .style("text-anchor", "middle")
-        .text("% de femmes");
+        .text("Pourcentage de femmes");
 
     // adding a title to the graph --> conditions according to name
     svg_graph.append("text")
