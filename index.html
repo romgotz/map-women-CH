@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pourcentage de femmes dans les parlements cantonaux suisses</title>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/tether/1.2.0/js/tether.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js' integrity='sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==' crossorigin='anonymous'></script>  
+    <!-- Load d3 --> 
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/7.0.0/d3.min.js' integrity='sha512-0x7/VCkKLLt4wnkFqI8Cgv6no+AaS1TDgmHLOoU3hy/WVtYta2J6gnOIHhYYDJlDxPqEqAYLPS4gzVex4mGJLw==' crossorigin='anonymous'></script>
+
+    <!-- Load topojson -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js' integrity='sha512-4UKI/XKm3xrvJ6pZS5oTRvIQGIzZFoXR71rRBb1y2N+PbwAsKa5tPl2J6WvbEvwN3TxQCm8hMzsl/pO+82iRlg==' crossorigin='anonymous'></script>
+
+    <!-- Load Classybrew for Jenks classification and color schemes ,modified version in lib folder -->
+  <script src="lib/classybrew.min.js"></script>
+
+  <!-- Link with the css style -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <!-- Create the div where the graph will be -->
+    <div id='map_area'>
+
+    <!-- Create the range slider -->
+    <p id='explication_slider'>Utilisez le slider pour explorer l'évolution à travers les années </p>
+      <div class="container">
+        <button id="minus">-</button>
+        <input id="range" type="range" min='1975' max='2020' step="1" value="1975">
+        <button id="plus">+</button>
+        <output for="range" id="output">Année: 1975</output>
+      </div> 
+    </div>
+  </div>
+
+    <div class="sidebar">
+
+      <p class ="explication">
+        <i>
+        Cette visualisation interactive vous permet d'observer l'évolution du pourcentage de femmes dans les parlements cantonaux depuis 1975 jusqu'en 2020. En cliquant sur un canton, un graphique apparaîtra ci-dessous pour observer l'évolution au fil du temps pour ce canton.</i></p>
+
+      <!-- Create the div for the graph area-->
+      <div id="graph_area" class="graph_area"></div>
+
+      <div class="copyright">
+        2021 © Romain Götz <br> 
+        Données : <a href="https://www.bfs.admin.ch/bfs/fr/home/statistiques/politique/elections/femmes.html" target="_blank"> OFS 2021</a>
+      </div>
+
+  </div>
+
+  
+    <!-- Link with the .js file -->
+    <script src="index.js"></script>
+</body>
+</html>
