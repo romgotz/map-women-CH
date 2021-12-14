@@ -134,9 +134,9 @@ function updateMap(selected_year){
     }; 
 
     // constructing the legend
-    var legend = svg.append('g').attr('transform', 'translate(595, 60)').classed('all-legend', true)
+    var legend = svg.append('g').attr('transform', 'translate(600, 60)').classed('all-legend', true)
     // determining width and height
-    var width_legend = 155, height_legend = legendCellSize*10;
+    var width_legend = 150, height_legend = legendCellSize*10;
     
     // highlight it with line
     legend.append('rect')
