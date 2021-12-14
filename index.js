@@ -11,7 +11,7 @@ height_graph = 340 - margin_graph.top - margin_graph.bottom,
 padding_legend = 5;
 
 // definition of general variables  
-var data_series = null, data_obj = {}, selected_year = 1975, domainscale = [], colorscale = []; 
+var data_series = null, data_obj = {}, selected_year = 1975, colorscale = []; 
 const f = d3.format(".2f"); // determine precision of two decimals 
 
 const path = d3.geoPath(), bbox = [485000, 75000, 834000, 296000];
@@ -114,14 +114,24 @@ function updateMap(selected_year){
     var color = d3.scaleThreshold()
         .domain(breaks.slice(1,5))
         .range(brew.getColors());
-
-    // updating domainscale and colorscale 
+    
+    // updating colorscale 
     for (var i = 0; i < breaks.length - 1; i++) {
         colorscale[i] = color(breaks[i]);
     }; // breaks.length - 1,  otherwise 6 classes instead of 5 
-    for (var i = 0; i < breaks.length ; i++) {
-        domainscale[i] = breaks[i]
-    };
+   
+    // counting number of cantons per class
+    items_classes = [];
+    for (var i = 0; i < breaks.length - 1 ; i++) {
+      upper_limit = breaks[i+1];
+      under_limit = breaks[i];
+
+      if(i === 4) {data = data_series.filter(function(d){ return d >= under_limit && d <= upper_limit})} // for the last class, upper limit is counted in
+      else {
+        data = data_series.filter(function(d){ return d >= under_limit && d < upper_limit})
+      }
+      items_classes[i] = d3.count(data) 
+    }; 
 
     // constructing the legend
     var legend = svg.append('g').attr('transform', 'translate(595, 60)').classed('all-legend', true)
@@ -181,7 +191,7 @@ function updateMap(selected_year){
             .attr('class', 'legend-cell')
             .on("mouseover", function(event, d){ 
                 legend.select('#cursor')
-                    .attr('transform', 'translate(' + (-legendCellSize - 5) + ', ' + ((12*padding_legend) + d* legendCellSize) + ')')
+                    .attr('transform', 'translate(' + (-legendCellSize - 15) + ', ' + ((12*padding_legend) + d* legendCellSize) + ')')
                     .style('display', null)
                 d3.selectAll("path[scorecolor='" + colorscale[d] + "']")
                     .style('fill', '#cf9973');
@@ -218,6 +228,18 @@ function updateMap(selected_year){
             .style('font-weight', '300')
             .style('text-anchor', 'middle')
                 .text("Mise en classe : quantile");
+
+    // adding the number of items per class
+    legendItems = legend.append('g')
+      .attr("transform", 'translate(-10, 40)')
+    for(let i = 0; i <= items_classes.length; i++) {
+      legendItems
+        .append('text')
+        .attr('x', -legendCellSize - padding_legend)
+        .attr('y' , 3*padding_legend + i * legendCellSize)
+          .text(items_classes[i])
+            .style("font-size", "10px"); 
+    }
 
     // adding cursor for interactivity 
     legend.append("polyline")
@@ -279,7 +301,7 @@ function updateMap(selected_year){
           tooltip.select('#tooltip-score')
           .text(statdata[year] + "%");
           legend.select('#cursor')
-          .attr('transform', 'translate(' + (-legendCellSize -5) + ', ' + ((12*padding_legend) + (getColorIndex(color(+statdata[year])) * legendCellSize)) +')')
+          .attr('transform', 'translate(' + (-legendCellSize -15) + ', ' + ((12*padding_legend) + (getColorIndex(color(+statdata[year])) * legendCellSize)) +')')
               .style('display', null)} else{
                   tooltip.select('#tooltip-score')
                 .text(" / ");
