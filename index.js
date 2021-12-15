@@ -289,12 +289,9 @@ function updateMap(selected_year){
           var selectedCanton = d3.select(this)
           selectedCanton
               .transition()
-              .style('opacity', 0.8)
-              .attr('stroke', 'white').style('stroke.opacity', 1)
               .style('fill', '#cf9973');
-          tooltip.attr('transform', 'translate(10, 40)');
-          tooltip
-              .style('display', null)
+          tooltip.attr('transform', 'translate(10, 40)'); // define position 
+          tooltip.style('display', null)
           tooltip.select('#tooltip-canton')
               .text(statdata.Canton);
           if(statdata[year] >= 0){
@@ -311,7 +308,7 @@ function updateMap(selected_year){
   function mouseout_map(event, d){
           d3.selectAll(".Cantons")
               .transition()
-              .style('opacity', 0.7)
+              // .style('opacity', 0.7)
           d3.select(this)
               .transition()
               .style('stroke', 'black').style('stroke-opacity', 0.8).style('fill', colorscale[d])
